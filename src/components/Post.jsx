@@ -35,6 +35,20 @@ export function Post({ author, publishedAt, content }) {
     setNewCommentText(""); //Seta o texto da textarea com aspas vazias para tirar qualquer texto de la, depois que que o submit de setComments for efetuado
   }
 
+  function deleteComment(commentToDelete) {
+    //função para que remove o comentario, lembrando que ela foi feita aqui pelo fato do useState do comment ser feito aqui!
+
+    const commentsWithoutDeletedOne = comments.filter((comment) => {
+      //essa const filtra os comentarios para que só apareça os comentarios que são diferentes dos selecionados para deletar(commentToDelete),
+      //ou seja diferente dos comentarios que tiveram o botão de lixeira clicado
+      return comment !== commentToDelete;
+    });
+
+    setComments(commentsWithoutDeletedOne);
+    //agora eu atualizo a lista de comentarios com o setComments, toda vez que o deleteComment for ativado(Atraves do botão de lixo)
+    // e passo o commentsWithoutDeletedOne para que cada vez que ele atualize, ele siga o filtro que eu criei
+  }
+
   return (
     <article className={styles.post}>
       <header>
@@ -82,7 +96,13 @@ export function Post({ author, publishedAt, content }) {
 
       <div className={styles.commentList}>
         {comments.map((comment) => {
-          return <Comment key={comment} content={comment} />;
+          return (
+            <Comment
+              key={comment}
+              content={comment}
+              onDeleteComment={deleteComment} // passei a função que remove comentario como propriedade, para que seja possivel puxa-la em outro componente
+            />
+          );
         })}
       </div>
     </article>

@@ -3,7 +3,12 @@ import { Avatar } from "./Avatar";
 
 import { ThumbsUp, Trash } from "phosphor-react";
 
-export function Comment({ content }) {
+export function Comment({ content, onDeleteComment }) {
+  function handleDelteComment() {
+    onDeleteComment(content);
+    // chamei a função onDeleteComment passando uma informação sobre o comentario, e no caso dessa aplicaçã,
+    // a unica informação existente no comentario é o content, mas por exemplo se tivesse o id, seria a melhor opção
+  }
   return (
     <div className={styles.comment}>
       <Avatar hasBorder={false} src="https://github.com/Erick10Kito.png" />
@@ -18,7 +23,7 @@ export function Comment({ content }) {
               </time>
             </div>
 
-            <button title="Deletar comentário">
+            <button onClick={handleDelteComment} title="Deletar comentário">
               <Trash size={24} />
             </button>
           </header>
