@@ -22,8 +22,10 @@ export function Post({ author, publishedAt, content }) {
     addSuffix: true,
   });
   function handleNewCommentChange() {
-    setNewCommentText(event.target.value);
+    event.target.setCustomValidity("");
+    // coloquei esse event aqui para que o sistema reconhça que quando o usuario digitar quer dizer que não precisa aparecer nenhuma mensagem de erro
 
+    setNewCommentText(event.target.value);
     //usado para setar o valor que chegou dentro da textarea na qual a função esta sendo chammada atraves de um onChange como 'newCommentText'
   }
 
@@ -33,6 +35,11 @@ export function Post({ author, publishedAt, content }) {
     event.preventDefault();
     setComments([...comments, newCommentText]); //pega os comentarios anteriores e adiciona o comentario que chegou atraves da textarea
     setNewCommentText(""); //Seta o texto da textarea com aspas vazias para tirar qualquer texto de la, depois que que o submit de setComments for efetuado
+  }
+
+  function handleNewCommentInvalid() {
+    //função que troca o texto de invalidação
+    event.target.setCustomValidity("Digite antes de publicar");
   }
 
   function deleteComment(commentToDelete) {
@@ -48,6 +55,8 @@ export function Post({ author, publishedAt, content }) {
     //agora eu atualizo a lista de comentarios com o setComments, toda vez que o deleteComment for ativado(Atraves do botão de lixo)
     // e passo o commentsWithoutDeletedOne para que cada vez que ele atualize, ele siga o filtro que eu criei
   }
+
+  const isNewCommentEmpty = newCommentText.length === 0; //essa const diz que isNewCommentEmpty é igual a quando a quantidade de caracteres do estado "newCommentText" for igual a zero
 
   return (
     <article className={styles.post}>
@@ -87,10 +96,16 @@ export function Post({ author, publishedAt, content }) {
           onChange={handleNewCommentChange}
           value={newCommentText}
           placeholder="Deixe um comentário"
+          onInvalid={handleNewCommentInvalid} //propriedade para quando o textarea for invalido, que nesse caso puxa a função que contem o novo texto de invalidação!
+          required //para não deixar que o usuario coloque um comentario sem conteudo, caso a pessoa tente publicar um comentario sem nada escrito, aparece um mensagem falando que não pode
         />
 
         <footer>
-          <button type="submit">Publicar</button>
+          <button disabled={isNewCommentEmpty} type="submit">
+            {/*Eu puxo a const 'isNewCommentEmpty' dentro do disabled, 
+            para que o disable só execute quando a const definida estiver acontecendo(só vai ser disabled quando a quantidade de caracteres no textarea for igual a zero)*/}
+            Publicar
+          </button>
         </footer>
       </form>
 
